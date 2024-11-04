@@ -1,5 +1,6 @@
 package com.amazon.ata.dynamodbscanandserialization.serialization;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -15,8 +16,12 @@ public class OrderSerializer {
      * @throws OrderSerializationException if the provided JSON cannot be deserialized to an Order object
      */
     public static Order toOrder(String json) {
-        // TODO: implement
-        return null;
+        try{
+            return MAPPER.readValue(json, Order.class);
+        }
+        catch (Exception e){
+            throw new OrderSerializationException("Failed to deserialize", e);
+        }
     }
 
     /**
@@ -26,7 +31,11 @@ public class OrderSerializer {
      * @throws OrderSerializationException if the order cannot be written to JSON
      */
     public static String toJSON(Order order) {
+        try{
+            return MAPPER.writeValueAsString(order);
+        }
+        catch (JsonProcessingException e){
+            throw new OrderSerializationException("Failed to serialize", e);
+        }
         // TODO: implement
-        return null;
-    }
-}
+}}
